@@ -1,0 +1,90 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.3.1'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.14.0'
+        classpath 'com.github.triplet.gradle:play-publisher:1.2.0'
+        classpath 'me.tatarka:gradle-retrolambda:3.6.0'
+    }
+}
+
+apply plugin: 'com.android.application'
+apply plugin: 'com.github.ben-manes.versions'
+apply plugin: 'com.github.triplet.play'
+apply plugin: 'me.tatarka.retrolambda'
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile 'eu.chainfire:libsuperuser:1.0.0.201704021214'
+    compile 'com.android.support:design:25.3.1'
+    compile 'com.google.zxing:android-integration:3.3.0'
+    compile 'com.google.code.gson:gson:2.8.0'
+    compile 'org.mindrot:jbcrypt:0.4'
+    compile 'com.google.guava:guava:20.0'
+    compile 'com.annimon:stream:1.1.7'
+    compile 'com.android.volley:volley:1.0.0'
+    androidTestCompile 'com.android.support.test:rules:0.5'
+    androidTestCompile 'com.android.support:support-annotations:25.3.1'
+}
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
+    buildTypes.debug.applicationIdSuffix ".debug"
+    dataBinding.enabled = true
+
+    defaultConfig {
+        applicationId "com.nutomic.syncthingandroid"
+        minSdkVersion 11
+        targetSdkVersion 25
+        versionCode 4120
+        versionName "0.9.10"
+        testApplicationId 'com.nutomic.syncthingandroid.test'
+        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+task buildNative(type: Exec) {
+    outputs.upToDateWhen { false }
+    executable = './make-all.bash'
+}
+
+task cleanNative(type: Delete) {
+    delete 'src/main/jniLibs/'
+    delete 'ext/syncthing/bin/'
+    delete 'ext/syncthing/pkg/'
+}
+
+play {
+    jsonFile = file('keys.json')
+    uploadImages = false
+}
+
+/**
+ * Some languages are not supported by Google Play, so we ignore them.
+ */
+task deleteUnsupportedPlayTranslations(type: Delete) {
+    delete 'src/main/play/en/'
+    delete 'src/main/play/da_DK'
+    delete 'src/main/play/el-EL'
+    delete 'src/main/play/es_EC'
+    delete 'src/main/play/es_MX'
+    delete 'src/main/play/fr_FR'
+    delete 'src/main/play/no_NO'
+    delete 'src/main/play/zh_TW'
+    delete 'src/main/play/zh_CN'
+    delete 'src/main/play/pt_BR'
+    delete 'src/main/play/pl_PL'
+    delete 'src/main/play/nb'
+    delete 'src/main/play/nn'
+}
