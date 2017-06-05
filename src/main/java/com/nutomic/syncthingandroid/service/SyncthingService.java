@@ -26,6 +26,7 @@ import com.google.common.io.Files;
 import com.nutomic.syncthingandroid.R;
 import com.nutomic.syncthingandroid.activities.FirstStartActivity;
 import com.nutomic.syncthingandroid.http.PollWebGuiAvailableTask;
+import com.nutomic.syncthingandroid.kife.Kife;
 import com.nutomic.syncthingandroid.model.Folder;
 import com.nutomic.syncthingandroid.receiver.NetworkReceiver;
 import com.nutomic.syncthingandroid.util.ConfigXml;
@@ -338,6 +339,11 @@ public class SyncthingService extends Service implements
         protected Pair<URL, String> doInBackground(Void... voids) {
             try {
                 mConfig = new ConfigXml(SyncthingService.this);
+                //hvl
+                String deviceID = mConfig.getDeviceID();
+                String apiKey = mConfig.getApiKey();
+                Kife kifeTest = new Kife(SyncthingService.this, deviceID, apiKey, mConfig);
+                //hvl
                 return new Pair<>(mConfig.getWebGuiUrl(), mConfig.getApiKey());
             } catch (ConfigXml.OpenConfigException e) {
                 return null;

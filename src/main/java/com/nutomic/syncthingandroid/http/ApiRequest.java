@@ -12,9 +12,9 @@ import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
+import com.nutomic.syncthingandroid.kife.NetworkFacade;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -61,11 +61,7 @@ public abstract class ApiRequest {
     private static RequestQueue sVolleyQueue;
 
     private RequestQueue getVolleyQueue() {
-        if (sVolleyQueue == null) {
-            Context context = mContext.getApplicationContext();
-            sVolleyQueue = Volley.newRequestQueue(context, new NetworkStack());
-        }
-        return sVolleyQueue;
+        return NetworkFacade.getInstance(mContext).getRequestQueue();
     }
 
     private final Context mContext;

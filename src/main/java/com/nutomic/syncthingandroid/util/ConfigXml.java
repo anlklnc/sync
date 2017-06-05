@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.nutomic.syncthingandroid.R;
+import com.nutomic.syncthingandroid.kife.DeviceList;
 import com.nutomic.syncthingandroid.service.SyncthingRunnable;
 
 import org.mindrot.jbcrypt.BCrypt;
@@ -98,6 +99,28 @@ public class ConfigXml {
     public String getApiKey() {
         return getGuiElement().getElementsByTagName("apikey").item(0).getTextContent();
     }
+
+    //hvl
+    public String getDeviceID() {
+        Element parent = mConfig.getDocumentElement();
+        Element folderElement = (Element)parent.getElementsByTagName("folder").item(0);
+        Element deviceElement = (Element)folderElement.getElementsByTagName("device").item(0);
+        String id = deviceElement.getAttribute("id");
+        return id;
+    }
+
+    public void setDevices(DeviceList devices) {
+
+        NodeList childNodes = mConfig.getDocumentElement().getChildNodes();
+        for (int i = 0; i < childNodes.getLength(); i++) {
+            Node node = childNodes.item(i);
+            if (node.getNodeName().equals("devices")) {
+                ((Element) node).setAttribute("name", Build.MODEL);
+            }
+        }
+        saveChanges();
+    }
+    //hvl
 
     public String getUserName() {
         return getGuiElement().getElementsByTagName("user").item(0).getTextContent();
