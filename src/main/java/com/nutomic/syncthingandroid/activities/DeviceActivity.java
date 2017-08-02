@@ -108,10 +108,10 @@ public class DeviceActivity extends SyncthingActivity implements View.OnClickLis
     private final TextWatcher mIdTextWatcher = new TextWatcherAdapter() {
         @Override
         public void afterTextChanged(Editable s) {
-            if (!s.toString().equals(mDevice.deviceID)) {
+            if (!s.toString().equals(mDevice.deviceId)) {
                 mDeviceNeedsToUpdate = true;
 
-                mDevice.deviceID = s.toString();
+                mDevice.deviceId = s.toString();
             }
         }
     };
@@ -263,11 +263,11 @@ public class DeviceActivity extends SyncthingActivity implements View.OnClickLis
      */
     public void onReceiveConnections(Connections connections) {
         boolean viewsExist = mSyncthingVersionView != null && mCurrentAddressView != null;
-        if (viewsExist && connections.connections.containsKey(mDevice.deviceID)) {
+        if (viewsExist && connections.connections.containsKey(mDevice.deviceId)) {
             mCurrentAddressView.setVisibility(VISIBLE);
             mSyncthingVersionView.setVisibility(VISIBLE);
-            mCurrentAddressView.setText(connections.connections.get(mDevice.deviceID).address);
-            mSyncthingVersionView.setText(connections.connections.get(mDevice.deviceID).clientVersion);
+            mCurrentAddressView.setText(connections.connections.get(mDevice.deviceId).address);
+            mSyncthingVersionView.setText(connections.connections.get(mDevice.deviceId).clientVersion);
         }
     }
 
@@ -281,7 +281,7 @@ public class DeviceActivity extends SyncthingActivity implements View.OnClickLis
             List<Device> devices = getApi().getDevices(false);
             mDevice = null;
             for (Device device : devices) {
-                if (device.deviceID.equals(getIntent().getStringExtra(EXTRA_DEVICE_ID))) {
+                if (device.deviceId.equals(getIntent().getStringExtra(EXTRA_DEVICE_ID))) {
                     mDevice = device;
                     break;
                 }
@@ -300,7 +300,7 @@ public class DeviceActivity extends SyncthingActivity implements View.OnClickLis
 
     private void updateViewsAndSetListeners() {
         // Update views
-        mIdView.setText(mDevice.deviceID);
+        mIdView.setText(mDevice.deviceId);
         mNameView.setText(mDevice.name);
         mAddressesView.setText(displayableAddresses());
         mCompressionValueView.setText(Compression.fromValue(this, mDevice.compression).getTitle(this));
@@ -331,7 +331,7 @@ public class DeviceActivity extends SyncthingActivity implements View.OnClickLis
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.create:
-                if (isEmpty(mDevice.deviceID)) {
+                if (isEmpty(mDevice.deviceId)) {
                     Toast.makeText(this, R.string.device_id_required, Toast.LENGTH_LONG)
                             .show();
                     return true;
@@ -341,7 +341,7 @@ public class DeviceActivity extends SyncthingActivity implements View.OnClickLis
                 finish();
                 return true;
             case R.id.share_device_id:
-                shareDeviceId(this, mDevice.deviceID);
+                shareDeviceId(this, mDevice.deviceId);
                 return true;
             case R.id.remove:
                showDeleteDialog();
@@ -364,7 +364,7 @@ public class DeviceActivity extends SyncthingActivity implements View.OnClickLis
         return new android.app.AlertDialog.Builder(this)
                 .setMessage(R.string.remove_device_confirm)
                 .setPositiveButton(android.R.string.yes, (dialogInterface, i) -> {
-                    getApi().removeDevice(mDevice.deviceID);
+                    getApi().removeDevice(mDevice.deviceId);
                     finish();
                 })
                 .setNegativeButton(android.R.string.no, null)
@@ -378,15 +378,15 @@ public class DeviceActivity extends SyncthingActivity implements View.OnClickLis
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
         if (scanResult != null) {
-            mDevice.deviceID = scanResult.getContents();
-            mIdView.setText(mDevice.deviceID);
+            mDevice.deviceId = scanResult.getContents();
+            mIdView.setText(mDevice.deviceId);
         }
     }
 
     private void initDevice() {
         mDevice = new Device();
         mDevice.name = "";
-        mDevice.deviceID = getIntent().getStringExtra(EXTRA_DEVICE_ID);
+        mDevice.deviceId = getIntent().getStringExtra(EXTRA_DEVICE_ID);
         mDevice.addresses = DYNAMIC_ADDRESS;
         mDevice.compression = METADATA.getValue(this);
         mDevice.introducer = false;
@@ -433,7 +433,7 @@ public class DeviceActivity extends SyncthingActivity implements View.OnClickLis
             IntentIntegrator integrator = new IntentIntegrator(DeviceActivity.this);
             integrator.initiateScan();
         } else if (v.equals(mIdContainer)) {
-            Util.copyDeviceId(this, mDevice.deviceID);
+            Util.copyDeviceId(this, mDevice.deviceId);
         }
     }
 

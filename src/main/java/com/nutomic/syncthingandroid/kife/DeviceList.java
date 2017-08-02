@@ -9,6 +9,8 @@ import org.json.JSONObject;
 
 public class DeviceList {
 
+    String name, email, home, mobile;
+
     public DeviceList(JSONObject json) {
         try {
             // Parsing json object response

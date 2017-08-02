@@ -5,7 +5,7 @@ import android.text.TextUtils;
 import java.util.List;
 
 public class Device {
-    public String deviceID;
+    public String deviceId;
     public String name;
     public List<String> addresses;
     public String compression;
@@ -17,7 +17,7 @@ public class Device {
      */
     public String getDisplayName() {
         return (TextUtils.isEmpty(name))
-                ? deviceID.substring(0, 7)
+                ? deviceId.substring(0, 7)
                 : name;
     }
 }

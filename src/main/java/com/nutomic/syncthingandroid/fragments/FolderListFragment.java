@@ -124,6 +124,9 @@ public class FolderListFragment extends ListFragment implements SyncthingService
                         .putExtra(FolderActivity.EXTRA_IS_CREATE, true);
                 startActivity(intent);
                 return true;
+            case R.id.test:
+
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

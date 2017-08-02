@@ -100,7 +100,7 @@ public class DeviceListFragment extends ListFragment implements SyncthingService
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         Intent intent = new Intent(getActivity(), DeviceActivity.class);
         intent.putExtra(DeviceActivity.EXTRA_IS_CREATE, false);
-        intent.putExtra(DeviceActivity.EXTRA_DEVICE_ID, mAdapter.getItem(i).deviceID);
+        intent.putExtra(DeviceActivity.EXTRA_DEVICE_ID, mAdapter.getItem(i).deviceId);
         startActivity(intent);
     }
 

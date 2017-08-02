@@ -9,4 +9,10 @@
         android:title="@string/add_folder"
         app:showAsAction="always|withText" />
 
+    <item
+        android:id="@+id/test"
+        android:icon="@drawable/ic_device_hub_black_24dp_active"
+        android:title="test"
+        app:showAsAction="ifRoom|withText" />
+
 </menu>

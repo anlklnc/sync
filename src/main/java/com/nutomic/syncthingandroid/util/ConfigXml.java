@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.nutomic.syncthingandroid.R;
 import com.nutomic.syncthingandroid.kife.DeviceList;
+import com.nutomic.syncthingandroid.kife.DomUtil;
 import com.nutomic.syncthingandroid.service.SyncthingRunnable;
 
 import org.mindrot.jbcrypt.BCrypt;
@@ -55,6 +56,7 @@ public class ConfigXml {
     private final File mConfigFile;
 
     private Document mConfig;
+    private Element root;
 
     public ConfigXml(Context context) throws OpenConfigException {
         mContext = context;
@@ -68,6 +70,7 @@ public class ConfigXml {
         try {
             DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
             mConfig = db.parse(mConfigFile);
+            root = mConfig.getDocumentElement();
         } catch (SAXException | ParserConfigurationException | IOException e) {
             throw new OpenConfigException();
         }
@@ -100,8 +103,22 @@ public class ConfigXml {
         return getGuiElement().getElementsByTagName("apikey").item(0).getTextContent();
     }
 
-    //hvl
+    public String getUserName() {
+        return getGuiElement().getElementsByTagName("user").item(0).getTextContent();
+    }
+
+
+    /////////////////////////////////////////////hvl
+
+    public String getDeviceName() {
+
+        Element selfDevice = DomUtil.findElement(mConfig, "device", false);
+        String name = selfDevice.getAttribute("name");
+        return name;
+    }
+
     public String getDeviceID() {
+
         Element parent = mConfig.getDocumentElement();
         Element folderElement = (Element)parent.getElementsByTagName("folder").item(0);
         Element deviceElement = (Element)folderElement.getElementsByTagName("device").item(0);
@@ -109,8 +126,57 @@ public class ConfigXml {
         return id;
     }
 
+    public void test() {
+
+//        Element e = DomUtil.findElement(mConfig, "device", false);
+//        Node n = e.cloneNode(true);
+//        mConfig.getDocumentElement().appendChild(n);
+//        String s = DomUtil.print(mConfig);
+//        Log.i(TAG, "test: "+s);
+
+
+        //
+//        Element ff = (Element)mConfig.getDocumentElement();
+//        Element ee = (Element)ff.cloneNode(true);
+        //
+
+//        Element parent = mConfig.getDocumentElement();
+//        NodeList nl = parent.getElementsByTagName("device");
+//        for(int i = 0; i<nl.getLength(); i++) {
+//            Element deviceElement = (Element) nl.item(i);
+//            String id = deviceElement.getAttribute("id");
+//            Log.i("!!!", "test: " + id);
+//        }
+    }
+
+    public void addDevice(String deviceId) {
+        Element selfDevice = DomUtil.findElement(mConfig, "device", false);
+        Element newDevice = (Element) selfDevice.cloneNode(true);
+        newDevice.setAttribute("id", deviceId);
+
+        String s = DomUtil.print(mConfig);
+//        Log.i(TAG, "test: "+s);
+
+        root.appendChild(newDevice);
+
+        s = DomUtil.print(mConfig);
+//        Log.i(TAG, "test: "+s);
+
+        Element folder = DomUtil.findElement(mConfig, "folder", false);
+        selfDevice = DomUtil.getChildElements(folder, "device").get(0);
+        newDevice = (Element) selfDevice.cloneNode(true);
+        newDevice.setAttribute("id", deviceId);
+        folder.appendChild(newDevice);
+
+        s = DomUtil.print(mConfig);
+//        Log.i(TAG, "test: "+s);
+
+        saveChanges();
+    }
+
     public void setDevices(DeviceList devices) {
 
+        //change local device name
         NodeList childNodes = mConfig.getDocumentElement().getChildNodes();
         for (int i = 0; i < childNodes.getLength(); i++) {
             Node node = childNodes.item(i);
@@ -119,12 +185,23 @@ public class ConfigXml {
             }
         }
         saveChanges();
-    }
-    //hvl
 
-    public String getUserName() {
-        return getGuiElement().getElementsByTagName("user").item(0).getTextContent();
+        //change default folder
+        Element folder = (Element) mConfig.getDocumentElement()
+                .getElementsByTagName("folder").item(0);
+        String model = Build.MODEL
+                .replace(" ", "_")
+                .toLowerCase(Locale.US)
+                .replaceAll("[^a-z0-9_-]", "");
+        folder.setAttribute("label", mContext.getString(R.string.default_folder_label));
+        folder.setAttribute("id", mContext.getString(R.string.default_folder_id, model));
+        folder.setAttribute("path", Environment
+                .getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath());
+        folder.setAttribute("type", "readonly");
+        saveChanges();
     }
+
+    /////////////////////////////////////////////hvl
 
     /**
      * Updates the config file.
@@ -219,6 +296,7 @@ public class ConfigXml {
      * Change default folder id to camera and path to camera folder path.
      */
     private void changeDefaultFolder() {
+        Log.i("!!!", "CHANGE DEFAULT FOLDER!");
         Element folder = (Element) mConfig.getDocumentElement()
                 .getElementsByTagName("folder").item(0);
         String model = Build.MODEL
@@ -227,8 +305,7 @@ public class ConfigXml {
                 .replaceAll("[^a-z0-9_-]", "");
         folder.setAttribute("label", mContext.getString(R.string.default_folder_label));
         folder.setAttribute("id", mContext.getString(R.string.default_folder_id, model));
-        folder.setAttribute("path", Environment
-                .getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath());
+        folder.setAttribute("path", Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath());
         folder.setAttribute("type", "readonly");
         saveChanges();
     }

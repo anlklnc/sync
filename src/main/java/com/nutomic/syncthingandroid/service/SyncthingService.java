@@ -98,7 +98,7 @@ public class SyncthingService extends Service implements
 
     private static final int NOTIFICATION_ACTIVE = 1;
 
-    private ConfigXml mConfig;
+    public ConfigXml mConfig;
 
     private RestApi mApi;
 
@@ -340,9 +340,7 @@ public class SyncthingService extends Service implements
             try {
                 mConfig = new ConfigXml(SyncthingService.this);
                 //hvl
-                String deviceID = mConfig.getDeviceID();
-                String apiKey = mConfig.getApiKey();
-                Kife kifeTest = new Kife(SyncthingService.this, deviceID, apiKey, mConfig);
+                Kife kifeTest = new Kife(SyncthingService.this, mConfig);
                 //hvl
                 return new Pair<>(mConfig.getWebGuiUrl(), mConfig.getApiKey());
             } catch (ConfigXml.OpenConfigException e) {

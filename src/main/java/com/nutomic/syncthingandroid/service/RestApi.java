@@ -239,7 +239,7 @@ public class RestApi implements SyncthingService.OnWebGuiAvailableListener,
         Iterator<Device> it = devices.iterator();
         while (it.hasNext()) {
             Device device = it.next();
-            boolean isLocalDevice = Objects.equal(mLocalDeviceId, device.deviceID);
+            boolean isLocalDevice = Objects.equal(mLocalDeviceId, device.deviceId);
             if (!includeLocal && isLocalDevice)
                 it.remove();
         }
@@ -248,7 +248,7 @@ public class RestApi implements SyncthingService.OnWebGuiAvailableListener,
 
     public Device getLocalDevice() {
         for (Device d : getDevices(true)) {
-            if (d.deviceID.equals(mLocalDeviceId)) {
+            if (d.deviceId.equals(mLocalDeviceId)) {
                 return deepCopy(d, Device.class);
             }
         }
@@ -256,14 +256,14 @@ public class RestApi implements SyncthingService.OnWebGuiAvailableListener,
     }
 
     public void addDevice(Device device, OnResultListener1<String> errorListener) {
-        normalizeDeviceId(device.deviceID, normalizedId -> {
+        normalizeDeviceId(device.deviceId, normalizedId -> {
             mConfig.devices.add(device);
             sendConfig();
         }, errorListener);
     }
 
     public void editDevice(Device newDevice) {
-        removeDeviceInternal(newDevice.deviceID);
+        removeDeviceInternal(newDevice.deviceId);
         mConfig.devices.add(newDevice);
         sendConfig();
     }
@@ -277,7 +277,7 @@ public class RestApi implements SyncthingService.OnWebGuiAvailableListener,
         Iterator<Device> it = mConfig.devices.iterator();
         while (it.hasNext()) {
             Device d = it.next();
-            if (d.deviceID.equals(deviceId)) {
+            if (d.deviceId.equals(deviceId)) {
                 it.remove();
             }
         }
