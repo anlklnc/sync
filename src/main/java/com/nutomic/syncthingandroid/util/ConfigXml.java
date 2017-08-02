@@ -7,8 +7,8 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.nutomic.syncthingandroid.R;
-import com.nutomic.syncthingandroid.kife.DeviceList;
 import com.nutomic.syncthingandroid.kife.DomUtil;
+import com.nutomic.syncthingandroid.model.Device;
 import com.nutomic.syncthingandroid.service.SyncthingRunnable;
 
 import org.mindrot.jbcrypt.BCrypt;
@@ -70,6 +70,7 @@ public class ConfigXml {
         try {
             DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
             mConfig = db.parse(mConfigFile);
+            String XML = DomUtil.print(mConfig);
             root = mConfig.getDocumentElement();
         } catch (SAXException | ParserConfigurationException | IOException e) {
             throw new OpenConfigException();
@@ -107,23 +108,44 @@ public class ConfigXml {
         return getGuiElement().getElementsByTagName("user").item(0).getTextContent();
     }
 
-
     /////////////////////////////////////////////hvl
 
-    public String getDeviceName() {
+    /** Cihazın xml içinde kendine ait olan kaydını verir. */
+    public Device getSelfDevice() {
 
-        Element selfDevice = DomUtil.findElement(mConfig, "device", false);
-        String name = selfDevice.getAttribute("name");
-        return name;
+        Element deviceElement = DomUtil.findElement(mConfig, "device", false);
+        String id = deviceElement.getAttribute("id");
+        String name = deviceElement.getAttribute("name");
+        Device device = new Device();
+        device.deviceId = id;
+        device.name = name;
+        return device;
     }
 
-    public String getDeviceID() {
+    /** Cihazı xml'e ekler */
+    public void addDevice(Device device) {
 
-        Element parent = mConfig.getDocumentElement();
-        Element folderElement = (Element)parent.getElementsByTagName("folder").item(0);
-        Element deviceElement = (Element)folderElement.getElementsByTagName("device").item(0);
-        String id = deviceElement.getAttribute("id");
-        return id;
+        String s = DomUtil.print(mConfig);
+        Log.i(TAG, "test: "+s);
+
+        //config altına device item'ını ekle
+        Element selfDevice = DomUtil.findElement(mConfig, "device", false);
+        Element newDevice = (Element) selfDevice.cloneNode(true);
+        newDevice.setAttribute("id", device.deviceId);
+        newDevice.setAttribute("name", device.name);
+        root.appendChild(newDevice);
+
+        //folder altına device item'ını ekle
+        Element folder = DomUtil.findElement(mConfig, "folder", false);
+        selfDevice = DomUtil.getChildElements(folder, "device").get(0);
+        newDevice = (Element) selfDevice.cloneNode(true);
+        newDevice.setAttribute("id", device.deviceId);
+        folder.appendChild(newDevice);
+
+        s = DomUtil.print(mConfig);
+        Log.i(TAG, "test: "+s);
+
+        saveChanges();
     }
 
     public void test() {
@@ -147,58 +169,6 @@ public class ConfigXml {
 //            String id = deviceElement.getAttribute("id");
 //            Log.i("!!!", "test: " + id);
 //        }
-    }
-
-    public void addDevice(String deviceId) {
-        Element selfDevice = DomUtil.findElement(mConfig, "device", false);
-        Element newDevice = (Element) selfDevice.cloneNode(true);
-        newDevice.setAttribute("id", deviceId);
-
-        String s = DomUtil.print(mConfig);
-//        Log.i(TAG, "test: "+s);
-
-        root.appendChild(newDevice);
-
-        s = DomUtil.print(mConfig);
-//        Log.i(TAG, "test: "+s);
-
-        Element folder = DomUtil.findElement(mConfig, "folder", false);
-        selfDevice = DomUtil.getChildElements(folder, "device").get(0);
-        newDevice = (Element) selfDevice.cloneNode(true);
-        newDevice.setAttribute("id", deviceId);
-        folder.appendChild(newDevice);
-
-        s = DomUtil.print(mConfig);
-//        Log.i(TAG, "test: "+s);
-
-        saveChanges();
-    }
-
-    public void setDevices(DeviceList devices) {
-
-        //change local device name
-        NodeList childNodes = mConfig.getDocumentElement().getChildNodes();
-        for (int i = 0; i < childNodes.getLength(); i++) {
-            Node node = childNodes.item(i);
-            if (node.getNodeName().equals("devices")) {
-                ((Element) node).setAttribute("name", Build.MODEL);
-            }
-        }
-        saveChanges();
-
-        //change default folder
-        Element folder = (Element) mConfig.getDocumentElement()
-                .getElementsByTagName("folder").item(0);
-        String model = Build.MODEL
-                .replace(" ", "_")
-                .toLowerCase(Locale.US)
-                .replaceAll("[^a-z0-9_-]", "");
-        folder.setAttribute("label", mContext.getString(R.string.default_folder_label));
-        folder.setAttribute("id", mContext.getString(R.string.default_folder_id, model));
-        folder.setAttribute("path", Environment
-                .getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath());
-        folder.setAttribute("type", "readonly");
-        saveChanges();
     }
 
     /////////////////////////////////////////////hvl
