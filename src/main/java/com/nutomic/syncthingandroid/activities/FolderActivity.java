@@ -106,9 +106,9 @@ public class FolderActivity extends SyncthingActivity
                 case R.id.device_toggle:
                     Device device = (Device) view.getTag();
                     if (isChecked) {
-                        mFolder.addDevice(device.deviceId);
+                        mFolder.addDevice(device.deviceID);
                     } else {
-                        mFolder.removeDevice(device.deviceId);
+                        mFolder.removeDevice(device.deviceID);
                     }
                     mFolderNeedsToUpdate = true;
                     break;
@@ -425,7 +425,7 @@ public class FolderActivity extends SyncthingActivity
     private void addDeviceViewAndSetListener(Device device, LayoutInflater inflater) {
         inflater.inflate(R.layout.item_device_form, mDevicesContainer);
         SwitchCompat deviceView = (SwitchCompat) mDevicesContainer.getChildAt(mDevicesContainer.getChildCount()-1);
-        deviceView.setChecked(mFolder.getDevice(device.deviceId) != null);
+        deviceView.setChecked(mFolder.getDevice(device.deviceID) != null);
         deviceView.setText(device.getDisplayName());
         deviceView.setTag(device);
         deviceView.setOnCheckedChangeListener(mCheckedListener);

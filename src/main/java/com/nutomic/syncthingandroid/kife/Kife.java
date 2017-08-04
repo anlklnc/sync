@@ -24,7 +24,8 @@ public class Kife {
 
         diskItems = Disk.load(context);   //lokaldeki cihazlar
 
-//        sendDevice();
+        sendDevice();
+//        Disk.save(context, new ArrayList<>());
     }
 
     private void sendDevice() {
@@ -75,7 +76,7 @@ public class Kife {
         for(Device serverItem:serverItems) {    //serverdan gelen her bir cihaz için
             boolean occurred = false;
             for(Device diskItem:diskItems) {    //lokalde bu cihaz var mı diye kontrol et
-                if(serverItem.deviceId.equals(diskItem.deviceId)) { //varsa işaretle
+                if(serverItem.deviceID == null || serverItem.deviceID.equals(diskItem.deviceID)) { //varsa işaretle
                     occurred = true;
                     break;
                 }
@@ -89,7 +90,7 @@ public class Kife {
             for(Device d:newItems) {
                 xml.addDevice(d);   //yeni cihazı config.xml'e ekle
                 diskItems.add(d);   //yeni cihazı diske kaydet
-                Log.i("!!!", "ADDED: " + d.name + " // " + d.deviceId);
+                Log.i("!!!", "ADDED: " + d.name + " // " + d.deviceID);
             }
             Disk.save(context, diskItems);
         }

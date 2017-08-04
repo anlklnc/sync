@@ -5,7 +5,11 @@ import android.text.TextUtils;
 import java.util.List;
 
 public class Device {
-    public String deviceId;
+
+//    @SerializedName("deviceId")
+//    @Expose
+    public String deviceID;
+
     public String name;
     public List<String> addresses;
     public String compression;
@@ -17,7 +21,7 @@ public class Device {
      */
     public String getDisplayName() {
         return (TextUtils.isEmpty(name))
-                ? deviceId.substring(0, 7)
+                ? deviceID.substring(0, 7)
                 : name;
     }
 }

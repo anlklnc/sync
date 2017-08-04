@@ -89,7 +89,7 @@ public class DomUtil {
 
     public static void addDeviceElement(Document dom, HvlDevice device) {
         Element e = newElement(dom, "device");
-        addAttr(e, "id", device.deviceId);
+        addAttr(e, "id", device.deviceID);
         addAttr(e, "name", device.name);
         addAttr(e, "compression", device.compression);
         //...

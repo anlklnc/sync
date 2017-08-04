@@ -46,13 +46,13 @@ public class Folder {
 
     public void addDevice(String deviceId) {
         Device d = new Device();
-        d.deviceId = deviceId;
+        d.deviceID = deviceId;
         devices.add(d);
     }
 
     public Device getDevice(String deviceId) {
         for (Device d : devices) {
-            if (d.deviceId.equals(deviceId)) {
+            if (d.deviceID.equals(deviceId)) {
                 return d;
             }
         }
@@ -61,7 +61,7 @@ public class Folder {
 
     public void removeDevice(String deviceId) {
         for (Iterator<Device> it = devices.iterator(); it.hasNext();) {
-            String currentId = it.next().deviceId;
+            String currentId = it.next().deviceID;
             if (currentId.equals(deviceId)) {
                 it.remove();
             }

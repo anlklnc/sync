@@ -3,10 +3,12 @@ package com.nutomic.syncthingandroid.util;
 import android.content.Context;
 import android.os.Build;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.Toast;
 
-import com.nutomic.syncthingandroid.R;
 import com.nutomic.syncthingandroid.kife.DomUtil;
 import com.nutomic.syncthingandroid.model.Device;
 import com.nutomic.syncthingandroid.service.SyncthingRunnable;
@@ -23,7 +25,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.SecureRandom;
-import java.util.Locale;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -117,7 +118,7 @@ public class ConfigXml {
         String id = deviceElement.getAttribute("id");
         String name = deviceElement.getAttribute("name");
         Device device = new Device();
-        device.deviceId = id;
+        device.deviceID = id;
         device.name = name;
         return device;
     }
@@ -126,12 +127,11 @@ public class ConfigXml {
     public void addDevice(Device device) {
 
         String s = DomUtil.print(mConfig);
-        Log.i(TAG, "test: "+s);
 
         //config altına device item'ını ekle
         Element selfDevice = DomUtil.findElement(mConfig, "device", false);
         Element newDevice = (Element) selfDevice.cloneNode(true);
-        newDevice.setAttribute("id", device.deviceId);
+        newDevice.setAttribute("id", device.deviceID);
         newDevice.setAttribute("name", device.name);
         root.appendChild(newDevice);
 
@@ -139,13 +139,20 @@ public class ConfigXml {
         Element folder = DomUtil.findElement(mConfig, "folder", false);
         selfDevice = DomUtil.getChildElements(folder, "device").get(0);
         newDevice = (Element) selfDevice.cloneNode(true);
-        newDevice.setAttribute("id", device.deviceId);
+        newDevice.setAttribute("id", device.deviceID);
         folder.appendChild(newDevice);
 
         s = DomUtil.print(mConfig);
-        Log.i(TAG, "test: "+s);
+        String id = device.deviceID.substring(0, 7);
+        String message = device.name+" // "+id;
+        display(message);
 
         saveChanges();
+    }
+
+    void display(String message) {
+        Handler h = new Handler(Looper.getMainLooper());
+        h.post(() -> Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show());
     }
 
     public void test() {
@@ -266,17 +273,24 @@ public class ConfigXml {
      * Change default folder id to camera and path to camera folder path.
      */
     private void changeDefaultFolder() {
-        Log.i("!!!", "CHANGE DEFAULT FOLDER!");
         Element folder = (Element) mConfig.getDocumentElement()
                 .getElementsByTagName("folder").item(0);
-        String model = Build.MODEL
-                .replace(" ", "_")
-                .toLowerCase(Locale.US)
-                .replaceAll("[^a-z0-9_-]", "");
-        folder.setAttribute("label", mContext.getString(R.string.default_folder_label));
-        folder.setAttribute("id", mContext.getString(R.string.default_folder_id, model));
-        folder.setAttribute("path", Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath());
-        folder.setAttribute("type", "readonly");
+
+//        String model = Build.MODEL
+//                .replace(" ", "_")
+//                .toLowerCase(Locale.US)
+//                .replaceAll("[^a-z0-9_-]", "");
+//        folder.setAttribute("label", mContext.getString(R.string.default_folder_label));
+//        folder.setAttribute("id", mContext.getString(R.string.default_folder_id, model));
+        folder.setAttribute("id", "kifetest");
+
+//        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/camera";
+        String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/KifeSync";
+        display(path);
+        folder.setAttribute("path", path);
+
+//        folder.setAttribute("type", "readonly");
+        folder.setAttribute("type", "readwrite");
         saveChanges();
     }
 

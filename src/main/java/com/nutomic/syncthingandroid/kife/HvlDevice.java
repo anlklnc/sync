@@ -20,7 +20,7 @@ public class HvlDevice extends Device{
     }
 
     public HvlDevice(String id, String name, String compression, String introducer, String skipIntroductionRemovals, String introducedBy, String address, String paused) {
-        this.deviceId = id;
+        this.deviceID = id;
         this.name = name;
         this.compression = compression;
         this.introducer = introducer;

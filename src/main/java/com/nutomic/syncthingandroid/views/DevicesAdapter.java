@@ -41,7 +41,7 @@ public class DevicesAdapter extends ArrayAdapter<Device> {
         TextView download = (TextView) convertView.findViewById(R.id.download);
         TextView upload = (TextView) convertView.findViewById(R.id.upload);
 
-        String deviceId = getItem(position).deviceId;
+        String deviceId = getItem(position).deviceID;
 
         name.setText(getItem(position).getDisplayName());
         Resources r = getContext().getResources();
