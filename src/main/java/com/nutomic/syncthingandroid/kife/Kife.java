@@ -51,7 +51,7 @@ public class Kife {
         }, device);
     }
 
-    private void getDeviceList() {
+    public void getDeviceList() {
         Network.getInstance().getDeviceList(new NetworkListener() {
             @Override
             public void onResponse(Object data) {

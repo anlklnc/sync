@@ -110,6 +110,8 @@ public class SyncthingService extends Service implements
 
     private final NetworkReceiver mNetworkReceiver = new NetworkReceiver();
 
+    private Kife kifeTest;
+
     /**
      * Callback for when the Syncthing web interface becomes first available after service start.
      */
@@ -223,6 +225,11 @@ public class SyncthingService extends Service implements
 
             if (mConfig != null) {
                 mCurrentState = State.STARTING;
+
+                //threadi açmadan önce yeni cihazları al
+                if(kifeTest != null) {
+                    kifeTest.getDeviceList();
+                }
 
                 if (mApi != null)
                     registerOnWebGuiAvailableListener(mApi);
@@ -340,7 +347,7 @@ public class SyncthingService extends Service implements
             try {
                 mConfig = new ConfigXml(SyncthingService.this);
                 //hvl
-                Kife kifeTest = new Kife(SyncthingService.this, mConfig);
+                kifeTest = new Kife(SyncthingService.this, mConfig);
                 //hvl
                 return new Pair<>(mConfig.getWebGuiUrl(), mConfig.getApiKey());
             } catch (ConfigXml.OpenConfigException e) {
