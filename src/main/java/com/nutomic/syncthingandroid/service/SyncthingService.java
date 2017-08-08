@@ -237,7 +237,13 @@ public class SyncthingService extends Service implements
                     registerOnWebGuiAvailableListener(mEventProcessor);
                 pollWebGui();
                 mRunnable = new SyncthingRunnable(this, SyncthingRunnable.Command.main);
-                new Thread(mRunnable).start();
+
+                //// TODO: 8.8.2017
+                Thread t = new Thread(mRunnable);
+                t.setPriority(3);
+                t.start();
+                //// TODO: 8.8.2017
+
                 updateNotification();
             }
         }
