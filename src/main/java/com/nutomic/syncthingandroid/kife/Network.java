@@ -32,7 +32,8 @@ import retrofit2.http.POST;
 public class Network {
 
 //    public static final String BASE_URL = "http://192.168.43.237:8080/";
-    public static final String BASE_URL = "http://192.168.43.206:8080/";
+//    public static final String BASE_URL = "http://192.168.43.206:8080/";
+    public static final String BASE_URL = "http://192.168.2.183:8080/";
 
     private static final Network singleton = new Network();
     ControlPanelClient client;
