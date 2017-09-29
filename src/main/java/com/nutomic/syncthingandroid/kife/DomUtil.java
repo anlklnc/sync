@@ -87,7 +87,7 @@ public class DomUtil {
         return result;
     }
 
-    public static void addDeviceElement(Document dom, HvlDevice device) {
+    public static void addDeviceElement(Document dom, KifeDevice device) {
         Element e = newElement(dom, "device");
         addAttr(e, "id", device.deviceID);
         addAttr(e, "name", device.name);

@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.nutomic.syncthingandroid.R;
+import com.nutomic.syncthingandroid.kife.KifeActivity;
 
 public class FirstStartActivity extends Activity implements Button.OnClickListener {
 

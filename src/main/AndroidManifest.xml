@@ -150,7 +150,7 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".activities.KifeActivity"
+        <activity android:name=".kife.KifeActivity"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

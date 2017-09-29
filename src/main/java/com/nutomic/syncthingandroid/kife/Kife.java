@@ -24,6 +24,7 @@ public class Kife {
 
         diskItems = Disk.load(context);   //lokaldeki cihazlar
 
+        Log.i("!!!", "Kife: send device");
         sendDevice();
 //        Disk.save(context, new ArrayList<>());
     }
