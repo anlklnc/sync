@@ -240,7 +240,7 @@ public class SyncthingService extends Service implements
 
                 //// TODO: 8.8.2017
                 Thread t = new Thread(mRunnable);
-                t.setPriority(3);
+//                t.setPriority(3);
                 t.start();
                 //// TODO: 8.8.2017
 

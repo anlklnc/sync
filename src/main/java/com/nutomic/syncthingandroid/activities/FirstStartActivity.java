@@ -62,15 +62,21 @@ public class FirstStartActivity extends Activity implements Button.OnClickListen
         if (isFirstStart) {
             mPreferences.edit().putBoolean("first_start", false).apply();
         }
-//        Intent intent = new Intent(this, MainActivity.class);
-//        intent.putExtra(MainActivity.EXTRA_FIRST_START, isFirstStart);
-//        startActivity(intent);
-        finish();
+        startMain(isFirstStart);
+//        startKife();
+    }
 
+    void startMain(boolean isFirstStart) {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra(MainActivity.EXTRA_FIRST_START, isFirstStart);
+        startActivity(intent);
+        finish();
+    }
+
+    void startKife() {
         Intent i = new Intent(this, KifeActivity.class);
         startActivity(i);
         finish();
-
     }
 
     private boolean haveStoragePermission() {

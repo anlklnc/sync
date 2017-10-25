@@ -32,8 +32,8 @@ import retrofit2.http.POST;
 public class Network {
 
 //    public static final String BASE_URL = "http://192.168.43.237:8080/";
-    public static final String BASE_URL = "http://192.168.43.206:8080/";
-//    public static final String BASE_URL = "http://192.168.2.183:8080/";
+//    public static final String BASE_URL = "http://192.168.43.206:8080/";
+    public static final String BASE_URL = "http://192.168.2.111:8080/";
 
     private static final Network singleton = new Network();
     ControlPanelClient client;
@@ -65,17 +65,6 @@ public class Network {
 
         @POST("/api/sync/device")
         Call<PostResponse> sendDevice(@Body Device user);
-//
-//        @FormUrlEncoded
-//        @POST("user/edit")
-//        Call<User> updateUser(@Field("first_name") String first, @Field("last_name") String last);
-//
-//        @Multipart
-//        @PUT("user/photo")
-//        Call<User> updateUser(@Part("photo") RequestBody photo, @Part("description") RequestBody description);
-//
-//        @GET("user")
-//        Call<User> getUser(@Header("Authorization") String authorization)
     }
 
     /** flight info */

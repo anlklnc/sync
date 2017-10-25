@@ -26,7 +26,6 @@ public class Kife {
 
         Log.i("!!!", "Kife: send device");
         sendDevice();
-//        Disk.save(context, new ArrayList<>());
     }
 
     private void sendDevice() {
@@ -94,6 +93,14 @@ public class Kife {
                 Log.i("!!!", "ADDED: " + d.name + " // " + d.deviceID);
             }
             Disk.save(context, diskItems);
+            restartService();
         }
+    }
+
+    public void restartService() {
+        Log.i("!!!", "restartService: ");
+//        Intent intent = new Intent(context, SyncthingService.class);
+//        intent.setAction(SyncthingService.ACTION_RESTART);
+//        context.startService(intent);
     }
 }
