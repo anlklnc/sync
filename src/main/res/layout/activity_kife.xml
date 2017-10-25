@@ -13,7 +13,7 @@
         android:onClick="restartService"
         android:text="Restart"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="48dp"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
@@ -59,7 +59,13 @@
         app:layout_constraintLeft_toLeftOf="@+id/button2"
         app:layout_constraintRight_toRightOf="@+id/button2"
         app:layout_constraintTop_toBottomOf="@+id/button2"
-        android:onClick="updateFolderInfo"/>
+        android:onClick="folders"/>
+
+    <View
+        android:id="@+id/indicator"
+        android:layout_width="50dp" android:layout_height="50dp" android:background="@color/green"
+        app:layout_constraintTop_toTopOf="parent"
+        />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -96,6 +102,15 @@
             <TextView
                 style="@style/tw1"
                 android:text="size" />
+            <TextView
+                style="@style/tw1"
+                android:text="total" />
+            <TextView
+                style="@style/tw1"
+                android:text="upload" />
+            <TextView
+                style="@style/tw1"
+                android:text="download" />
         </LinearLayout>
 
         <LinearLayout
@@ -116,11 +131,11 @@
                 style="@style/tw2"
                 />
             <TextView
-                android:id="@+id/tw_percentage"
+                android:id="@+id/tw_state"
                 style="@style/tw2"
                 />
             <TextView
-                android:id="@+id/tw_state"
+                android:id="@+id/tw_percentage"
                 style="@style/tw2"
                 />
             <TextView
@@ -129,6 +144,18 @@
                 />
             <TextView
                 android:id="@+id/tw_size"
+                style="@style/tw2"
+                />
+            <TextView
+                android:id="@+id/tw_total"
+                style="@style/tw2"
+                />
+            <TextView
+                android:id="@+id/tw_up"
+                style="@style/tw2"
+                />
+            <TextView
+                android:id="@+id/tw_down"
                 style="@style/tw2"
                 />
         </LinearLayout>

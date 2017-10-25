@@ -9,4 +9,32 @@
     <color name="text_blue">#ff33b5e5</color>
     <color name="text_green">#ff99cc00</color>
     <color name="light_grey">#cccccc</color>
+
+    <color name="gray1">#A4A4A4</color>
+    <color name="gray2">#6E6E6E</color>
+    <color name="gray3">#424242</color>
+    <color name="gray4">#2E2E2E</color>
+    <color name="red">#EA2828</color>
+    <color name="red2">#8A0808</color>
+    <color name="red3">#9C0000</color>
+    <color name="blue">#2196F3</color>
+    <color name="blue2">#084B8A</color>
+    <color name="green">#5FB404</color>
+    <color name="green2">#088A29</color>
+    <color name="white">#FFFFFF</color>
+    <color name="white2">#E5e5e5</color>
+    <color name="white3">#D8D8D8</color>
+    <color name="white4">#FBFBEF</color>
+    <color name="white5">#F5F6CE</color>
+    <color name="black">#000</color>
+    <color name="orange">#FF8000</color>
+    <color name="orange2">#CE5200</color>
+    <color name="orange3">#D14614</color>
+
+    <color name="state_idle">@color/gray2</color>
+    <color name="state_scanning">@color/blue</color>
+    <color name="state_cleaning">@color/orange</color>
+    <color name="state_syncing">@color/green</color>
+    <color name="state_error">@color/red</color>
+    <color name="state_unknown">@color/red2</color>
 </resources>
