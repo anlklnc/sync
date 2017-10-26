@@ -1,31 +1,63 @@
 package com.nutomic.syncthingandroid.kife;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
 import com.nutomic.syncthingandroid.model.Device;
+import com.nutomic.syncthingandroid.service.SyncthingService;
 import com.nutomic.syncthingandroid.util.ConfigXml;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by asd on 2.6.2017.
  */
 
-public class Kife {
+public class KifeDeviceManager {
+
+    static final int POLLING_TIME = 30;
 
     Context context;
     ConfigXml xml;
     ArrayList<Device> diskItems;
+    boolean isSendSuccessful = false;
+    private boolean isFirstIteration = true;
+    int count = 0;
 
-    public Kife(Context context, ConfigXml configXml) {
+    public KifeDeviceManager(Context context, ConfigXml configXml) {
         this.context = context;
         xml = configXml;
 
         diskItems = Disk.load(context);   //lokaldeki cihazlar
 
-        Log.i("!!!", "Kife: send device");
-        sendDevice();
+        startPolling();
+    }
+
+    private void startPolling() {
+
+        Timer timer = new Timer();
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                Log.i("!!!", "device request timer: ");
+                count++;
+                if(count == 2) {
+                    isFirstIteration = false;
+                }
+
+                //send device cevabı alana kadar send device gönder, cevap gelince sürekli get device list gönder
+                if(!isSendSuccessful) {
+                    sendDevice();
+                } else {
+                    getDeviceList();
+                }
+            }
+        };
+        //schedule your timer to execute perodically
+        timer.schedule(task, 0, POLLING_TIME*1000);
     }
 
     private void sendDevice() {
@@ -41,6 +73,7 @@ public class Kife {
             @Override
             public void onResponse(Object o) {
                 Log.i("!!!", "send device success");
+                isSendSuccessful = true;
                 getDeviceList();
             }
 
@@ -93,14 +126,16 @@ public class Kife {
                 Log.i("!!!", "ADDED: " + d.name + " // " + d.deviceID);
             }
             Disk.save(context, diskItems);
-            restartService();
+            if(!isFirstIteration) {  //after first iteration
+                restartService();
+            }
         }
     }
 
     public void restartService() {
         Log.i("!!!", "restartService: ");
-//        Intent intent = new Intent(context, SyncthingService.class);
-//        intent.setAction(SyncthingService.ACTION_RESTART);
-//        context.startService(intent);
+        Intent intent = new Intent(context, SyncthingService.class);
+        intent.setAction(SyncthingService.ACTION_RESTART);
+        context.startService(intent);
     }
 }

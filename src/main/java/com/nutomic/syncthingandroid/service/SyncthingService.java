@@ -26,7 +26,7 @@ import com.google.common.io.Files;
 import com.nutomic.syncthingandroid.R;
 import com.nutomic.syncthingandroid.activities.FirstStartActivity;
 import com.nutomic.syncthingandroid.http.PollWebGuiAvailableTask;
-import com.nutomic.syncthingandroid.kife.Kife;
+import com.nutomic.syncthingandroid.kife.KifeDeviceManager;
 import com.nutomic.syncthingandroid.model.Folder;
 import com.nutomic.syncthingandroid.receiver.NetworkReceiver;
 import com.nutomic.syncthingandroid.util.ConfigXml;
@@ -110,7 +110,7 @@ public class SyncthingService extends Service implements
 
     private final NetworkReceiver mNetworkReceiver = new NetworkReceiver();
 
-    private Kife kifeTest;
+    private KifeDeviceManager kifeDeviceManager;
 
     /**
      * Callback for when the Syncthing web interface becomes first available after service start.
@@ -227,8 +227,8 @@ public class SyncthingService extends Service implements
                 mCurrentState = State.STARTING;
 
                 //threadi açmadan önce yeni cihazları al
-                if(kifeTest != null) {
-                    kifeTest.getDeviceList();
+                if(kifeDeviceManager != null) {
+                    kifeDeviceManager.getDeviceList();
                 }
 
                 if (mApi != null)
@@ -353,7 +353,7 @@ public class SyncthingService extends Service implements
             try {
                 mConfig = new ConfigXml(SyncthingService.this);
                 //hvl
-                kifeTest = new Kife(SyncthingService.this, mConfig);
+                kifeDeviceManager = new KifeDeviceManager(SyncthingService.this, mConfig);
                 //hvl
                 return new Pair<>(mConfig.getWebGuiUrl(), mConfig.getApiKey());
             } catch (ConfigXml.OpenConfigException e) {
@@ -435,6 +435,7 @@ public class SyncthingService extends Service implements
     }
 
     private void shutdown() {
+        Log.i("!!!", "SERVICE SHUTDOWN!");
         if (mEventProcessor != null)
             mEventProcessor.shutdown();
 

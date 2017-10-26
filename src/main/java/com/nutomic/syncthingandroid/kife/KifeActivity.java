@@ -98,31 +98,36 @@ public class KifeActivity extends SyncthingActivity{
 
     public void connections(View view) {
         getApi().getConnections(connections -> {
-            ArrayList<Device> devices = (ArrayList<Device>) getApi().getDevices(false);
-            String someDeviceId =devices.get(0).deviceID;
-            Connections.Connection c = connections.connections.get(someDeviceId);
-            int completion = -1;  //status by
             try {
-                completion = c.completion;
-                twTotal.setText(completion+"");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            long in = -1;
-            try {
-                in = c.inBits;
-                twDown.setText(in+"");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            long out = -1;
-            try {
-                out = c.outBits;
-                twUp.setText(out+"");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            Log.i("!!!", "connections: " + completion+"//"+in+"//"+out);
+                ArrayList<Device> devices = (ArrayList<Device>) getApi().getDevices(false);
+                if(devices == null) {
+                    return;
+                }
+                String someDeviceId = devices.get(0).deviceID;
+                Connections.Connection c = connections.connections.get(someDeviceId);
+                int completion = -1;  //status by
+                try {
+                    completion = c.completion;
+                    twTotal.setText(completion+"");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                long in = -1;
+                try {
+                    in = c.inBits;
+                    twDown.setText(in+"");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                long out = -1;
+                try {
+                    out = c.outBits;
+                    twUp.setText(out+"");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+//              Log.i("!!!", "connections: " + completion+"//"+in+"//"+out);
+            } catch (Exception e) {}
         });
     }
 
@@ -207,5 +212,15 @@ public class KifeActivity extends SyncthingActivity{
 
     void startPolling() {
         folders(null);
+    }
+
+    public void shutdown(View v) {
+        getApi().shutdown();
+    }
+
+    @Override
+    protected void onDestroy() {
+        //todo get service stop service
+        super.onDestroy();
     }
 }

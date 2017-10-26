@@ -186,6 +186,7 @@ public class RestApi implements SyncthingService.OnWebGuiAvailableListener,
      * Stops syncthing and cancels notification.
      */
     public void shutdown() {
+        Log.i("!!!", "API SHUTDOWN!");
         NotificationManager nm = (NotificationManager)
                 mContext.getSystemService(Context.NOTIFICATION_SERVICE);
         nm.cancel(RestartActivity.NOTIFICATION_RESTART);
