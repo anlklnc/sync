@@ -28,6 +28,7 @@ public class KifeActivity extends SyncthingActivity{
     boolean isPolling = false;
     boolean indicator = true;
     int counter = 0;
+    int apiState = 0;
 
     TextView twId, twLabel, twPath, twPercentage, twItems, twSize, twState, twTotal, twUp, twDown;
     View indicatorView;
@@ -186,5 +187,25 @@ public class KifeActivity extends SyncthingActivity{
             indicator = true;
             indicatorView.setBackgroundResource(R.color.green2);
         }
+    }
+
+    @Override
+    protected void showLoadingDialog() {
+        super.showLoadingDialog();
+        apiState = 1;
+    }
+
+    /** Uygulama çalışmaya hazır olduğunda bu çağırılır. */
+    @Override
+    protected void dismissLoadingDialog() {
+        super.dismissLoadingDialog();
+        if(apiState == 1) {
+            apiState = 0;
+            startPolling();
+        }
+    }
+
+    void startPolling() {
+        folders(null);
     }
 }

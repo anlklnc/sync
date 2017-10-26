@@ -124,7 +124,7 @@ public abstract class SyncthingActivity extends ToolbarBindingActivity implement
     /**
      * Shows the loading dialog with the correct text ("creating keys" or "loading").
      */
-    private void showLoadingDialog() {
+    protected void showLoadingDialog() {
         if (isFinishing() || mLoadingDialog != null)
             return;
 
@@ -142,7 +142,7 @@ public abstract class SyncthingActivity extends ToolbarBindingActivity implement
                 .show();
     }
 
-    private void dismissLoadingDialog() {
+    protected void dismissLoadingDialog() {
         if (mLoadingDialog != null) {
             mLoadingDialog.dismiss();
             mLoadingDialog = null;
