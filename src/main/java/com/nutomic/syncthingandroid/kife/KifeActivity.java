@@ -8,6 +8,8 @@ import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.nutomic.syncthingandroid.BuildConfig;
@@ -32,6 +34,10 @@ public class KifeActivity extends SyncthingActivity{
 
     TextView twId, twLabel, twPath, twPercentage, twItems, twSize, twState, twTotal, twUp, twDown;
     View indicatorView;
+    ListView list;
+    private ArrayList<Device> devices;
+    private ArrayAdapter<String> adapter;
+    private ArrayList<String> items;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +55,12 @@ public class KifeActivity extends SyncthingActivity{
         twUp = (TextView) findViewById(R.id.tw_up);
         twDown = (TextView) findViewById(R.id.tw_down);
         indicatorView = findViewById(R.id.indicator);
+
+        list = (ListView)findViewById(R.id.list);
+        items = new ArrayList<>();
+//        items.add("atos"); items.add("portos"); items.add("paramis");
+        adapter = new ArrayAdapter<>(this, R.layout.list_item_default_text, items);
+        list.setAdapter(adapter);
     }
 
     public void restartService(View view) {
@@ -99,39 +111,49 @@ public class KifeActivity extends SyncthingActivity{
     public void connections(View view) {
         getApi().getConnections(connections -> {
             try {
-                ArrayList<Device> devices = (ArrayList<Device>) getApi().getDevices(false);
+                devices = (ArrayList<Device>)getApi().getDevices(false);
                 if(devices == null) {
                     return;
                 }
-                String someDeviceId = devices.get(0).deviceID;
-                Connections.Connection c = connections.connections.get(someDeviceId);
-                int completion = -1;  //status by
-                try {
-                    completion = c.completion;
-                    twTotal.setText(completion+"");
-                } catch (Exception e) {
-                    e.printStackTrace();
+
+                items.clear();
+
+                for(int i=0; i<devices.size(); i++) {
+
+                    Device device = devices.get(i);
+                    String someDeviceId = device.deviceID;
+                    Connections.Connection c = connections.connections.get(someDeviceId);
+                    int completion = -1;  //status by
+                    try {
+                        completion = c.completion;
+//                        twTotal.setText(completion+"");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    String in = "";
+                    try {
+                        in = Util.readableTransferRate(this, c.inBits);
+//                        twDown.setText(in+"");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    String out = "";
+                    try {
+                        out = Util.readableTransferRate(this, c.outBits);
+//                        twUp.setText(out+"");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    String s = device.getDisplayName() + ": "+completion+" | "+in+" | "+out;
+                    items.add(s);
                 }
-                long in = -1;
-                try {
-                    in = c.inBits;
-                    twDown.setText(in+"");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                long out = -1;
-                try {
-                    out = c.outBits;
-                    twUp.setText(out+"");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-//              Log.i("!!!", "connections: " + completion+"//"+in+"//"+out);
+                adapter.notifyDataSetChanged();
+
             } catch (Exception e) {}
         });
     }
 
-    ///// folderla ilgili kısım
+    /** folderla ilgili kısım */
     public void onReceiveModel(String s, Model model) {
 
         int percentage = (model.localBytes != 0)
