@@ -7,8 +7,8 @@ import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.Pair;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -26,7 +26,8 @@ import java.util.ArrayList;
 
 public class KifeActivity extends SyncthingActivity{
 
-    static final int UPDATE_TIME = 2000;
+    static final int UPDATE_TIME = 2;
+    static final int CONNECTION_DISPLAY_CYCLE = 6;
     boolean isPolling = false;
     boolean indicator = true;
     int counter = 0;
@@ -36,8 +37,10 @@ public class KifeActivity extends SyncthingActivity{
     View indicatorView;
     ListView list;
     private ArrayList<Device> devices;
-    private ArrayAdapter<String> adapter;
-    private ArrayList<String> items;
+    private CustomArrayAdapter adapter;
+    private ArrayList<Pair> items;
+    private long[] downloadList;
+    private long[] uploadList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +62,7 @@ public class KifeActivity extends SyncthingActivity{
         list = (ListView)findViewById(R.id.list);
         items = new ArrayList<>();
 //        items.add("atos"); items.add("portos"); items.add("paramis");
-        adapter = new ArrayAdapter<>(this, R.layout.list_item_default_text, items);
+        adapter = new CustomArrayAdapter(items);
         list.setAdapter(adapter);
     }
 
@@ -93,10 +96,10 @@ public class KifeActivity extends SyncthingActivity{
                     connections(null);
                 }
                 counter++;
-                if(counter==3) {
+                if(counter==CONNECTION_DISPLAY_CYCLE) {
                     counter = 0;
                 }
-                handler.postDelayed(this, UPDATE_TIME);
+                handler.postDelayed(this, UPDATE_TIME*1000);
             }
         }, UPDATE_TIME);
     }
@@ -116,13 +119,28 @@ public class KifeActivity extends SyncthingActivity{
                     return;
                 }
 
-                items.clear();
+                //ilk girişte initialize et
+                if(uploadList == null) {
+                    uploadList = new long[devices.size()];
+                    for(int i = 0; i<uploadList.length; i++) {
+                        uploadList[i] = 0;
+                    }
+                    downloadList = new long[devices.size()];
+                    for(int i=0; i<downloadList.length; i++) {
+                        downloadList[i] = 0;
+                    }
+                }
 
+                items.clear();
                 for(int i=0; i<devices.size(); i++) {
 
                     Device device = devices.get(i);
                     String someDeviceId = device.deviceID;
                     Connections.Connection c = connections.connections.get(someDeviceId);
+
+                    long totalUpload = uploadList[i];
+                    long totalDownload = downloadList[i];
+
                     int completion = -1;  //status by
                     try {
                         completion = c.completion;
@@ -130,22 +148,28 @@ public class KifeActivity extends SyncthingActivity{
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    String in = "";
+
+                    //add download
                     try {
-                        in = Util.readableTransferRate(this, c.inBits);
-//                        twDown.setText(in+"");
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    String out = "";
+                        long downloadRate = c.inBits;
+                        downloadRate *= (UPDATE_TIME*CONNECTION_DISPLAY_CYCLE);
+                        totalDownload += downloadRate;
+                    } catch (Exception e) {}
+
+                    //add upload
                     try {
-                        out = Util.readableTransferRate(this, c.outBits);
-//                        twUp.setText(out+"");
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    String s = device.getDisplayName() + ": "+completion+" | "+in+" | "+out;
-                    items.add(s);
+                        long uploadRate = c.outBits;
+                        uploadRate *= (UPDATE_TIME*CONNECTION_DISPLAY_CYCLE);
+                        totalUpload += uploadRate;
+                    } catch (Exception e) {}
+
+                    uploadList[i] = totalUpload;
+                    downloadList[i] = totalDownload;
+
+                    String download = Util.readableTransferRate(this, totalDownload);
+                    String upload = Util.readableTransferRate(this, totalUpload);
+                    Pair<String, String> item = new Pair(device.getDisplayName()+" | "+completion+"%", "d: "+download+"   |   u: "+upload);
+                    items.add(item);
                 }
                 adapter.notifyDataSetChanged();
 
@@ -244,5 +268,25 @@ public class KifeActivity extends SyncthingActivity{
     protected void onDestroy() {
         //todo get service stop service
         super.onDestroy();
+    }
+
+    public class CustomArrayAdapter extends BaseArrayAdapter<Pair> {
+
+        static final int LAYOUT = R.layout.item_device_data;
+
+        public CustomArrayAdapter(ArrayList<Pair> items) {
+            super(KifeActivity.this, LAYOUT, R.id.tw1, items);
+        }
+
+        @Override
+        public void handleView(View view, int position) {
+            TextView tw1 = (TextView) view.findViewById(R.id.tw1);
+            String s1 = (String) getItem(position).first;
+            tw1.setText(s1);
+
+            TextView tw2 = (TextView) view.findViewById(R.id.tw2);
+            String s2 = (String) getItem(position).second;
+            tw2.setText(s2);
+        }
     }
 }
