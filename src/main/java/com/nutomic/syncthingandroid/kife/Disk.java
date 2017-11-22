@@ -18,6 +18,7 @@ public class Disk {
 
     public static final String SYNC_SHARED_PREF = "com.anilkilinc.syncthing";
     public static final String DEVICE_LIST = "com.anilkilinc.syncthing.device_list";
+    public static final String DEVICE_NUMBER = "com.anilkilinc.syncthing.device_number";
 
     /** Paylaşım yapılan cihazların listesini dosyaya yazar. */
     public static void save(Context context, ArrayList<Device> list) {
@@ -43,5 +44,15 @@ public class Disk {
         } else {
             return new ArrayList<>();
         }
+    }
+
+    public static void saveDeviceNumber(Context context, int number) {
+        SharedPreferences.Editor editor = context.getSharedPreferences(SYNC_SHARED_PREF, Context.MODE_PRIVATE).edit();
+        editor.putInt(DEVICE_NUMBER, number).apply();
+    }
+
+    public static int loadDeviceNumber(Context context) {
+        int number = context.getSharedPreferences(SYNC_SHARED_PREF, Context.MODE_PRIVATE).getInt(DEVICE_NUMBER, -1);
+        return number;
     }
 }

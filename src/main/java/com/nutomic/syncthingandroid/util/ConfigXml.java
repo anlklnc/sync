@@ -143,7 +143,7 @@ public class ConfigXml {
         folder.appendChild(newDevice);
 
         s = DomUtil.print(mConfig);
-        String id = device.deviceID.substring(0, 7);
+        String id = device.deviceID.substring(0, 3);
         String message = device.name+" // "+id;
         display(message);
 

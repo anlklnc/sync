@@ -47,13 +47,15 @@
             android:visibility="gone" />
     </LinearLayout>
 
-    <View
-        android:id="@+id/indicator"
-        android:layout_width="100dp"
-        android:layout_height="20dp"
-        android:background="@color/green" />
+    <TextView
+        android:id="@+id/tw_indicator"
+        android:layout_width="100dp" android:layout_height="20dp"
+        android:layout_marginTop="4dp"
+        android:gravity="center"
+        android:text="|"/>
 
     <LinearLayout
+        android:id="@+id/lin_textt"
         android:layout_width="match_parent" android:layout_height="wrap_content"
         android:layout_marginTop="50dp" android:layout_marginLeft="20dp"
         android:orientation="horizontal">
@@ -83,6 +85,10 @@
 
             <TextView
                 style="@style/tw1"
+                android:text="somedata" />
+
+            <TextView
+                style="@style/tw1"
                 android:text="percentage" />
 
             <TextView
@@ -92,6 +98,22 @@
             <TextView
                 style="@style/tw1"
                 android:text="size" />
+
+            <TextView
+                style="@style/tw1"
+                android:text="total upl" />
+
+            <TextView
+                style="@style/tw1"
+                android:text="total downl" />
+
+            <TextView
+                style="@style/tw1"
+                android:text="upload" />
+
+            <TextView
+                style="@style/tw1"
+                android:text="download" />
         </LinearLayout>
 
         <LinearLayout
@@ -118,6 +140,10 @@
                 style="@style/tw2" />
 
             <TextView
+                android:id="@+id/tw_somedata"
+                style="@style/tw2" />
+
+            <TextView
                 android:id="@+id/tw_percentage"
                 style="@style/tw2" />
 
@@ -130,7 +156,11 @@
                 style="@style/tw2" />
 
             <TextView
-                android:id="@+id/tw_total"
+                android:id="@+id/tw_total_upload"
+                style="@style/tw2" />
+
+            <TextView
+                android:id="@+id/tw_total_download"
                 style="@style/tw2" />
 
             <TextView
@@ -149,4 +179,25 @@
             ></ListView>
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/tw_total_sync_time" style="@style/ww"
+        android:layout_below="@id/lin_textt"
+        android:layout_marginTop="20dp" android:layout_marginLeft="20dp"
+        android:textStyle="bold"
+        />
+
+    <TextView
+        android:id="@+id/tw_total_scan_time" style="@style/ww"
+        android:layout_below="@id/tw_total_sync_time"
+        android:layout_marginTop="10dp" android:layout_marginLeft="20dp"
+        android:textStyle="bold"
+        />
+
+    <TextView
+        android:id="@+id/tw_device_name" style="@style/ww"
+        android:layout_alignParentTop="true" android:layout_alignParentRight="true"
+        android:layout_margin="10dp"
+        android:textSize="16sp" android:textColor="@color/blue" android:textStyle="bold"
+    />
 </RelativeLayout>

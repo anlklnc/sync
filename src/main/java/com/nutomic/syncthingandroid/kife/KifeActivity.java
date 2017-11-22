@@ -27,20 +27,29 @@ import java.util.ArrayList;
 public class KifeActivity extends SyncthingActivity{
 
     static final int UPDATE_TIME = 2;
-    static final int CONNECTION_DISPLAY_CYCLE = 6;
+    static final int CONNECTION_DISPLAY_CYCLE = 1;
     boolean isPolling = false;
-    boolean indicator = true;
+    int indicator = 0;
     int counter = 0;
     int apiState = 0;
 
-    TextView twId, twLabel, twPath, twPercentage, twItems, twSize, twState, twTotal, twUp, twDown;
-    View indicatorView;
+    TextView twId, twLabel, twPath, twSomeData, twPercentage, twItems, twSize, twState, twTotalUp,  twTotalDown, twUp, twDown;
+    TextView deviceNameView, totalSyncTimeView, totalScanTimeView;
+    TextView indicatorView;
     ListView list;
     private ArrayList<Device> devices;
     private CustomArrayAdapter adapter;
     private ArrayList<Pair> items;
-    private long[] downloadList;
-    private long[] uploadList;
+    private ArrayList<Long> downloadList;
+    private ArrayList<Long> uploadList;
+    private long totalUpload = 0;
+    private long totalDownload = 0;
+    private int devicesSize = 0;
+    private long downloadOnStart = 0;
+
+    int deviceNumber = -1;
+    int state = 0;
+    long start = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,14 +59,19 @@ public class KifeActivity extends SyncthingActivity{
         twId = (TextView) findViewById(R.id.tw_id);
         twLabel = (TextView) findViewById(R.id.tw_label);
         twPath = (TextView) findViewById(R.id.tw_path);
+        twSomeData = (TextView) findViewById(R.id.tw_somedata);
         twPercentage = (TextView) findViewById(R.id.tw_percentage);
         twItems = (TextView) findViewById(R.id.tw_items);
         twSize = (TextView) findViewById(R.id.tw_size);
         twState = (TextView) findViewById(R.id.tw_state);
-        twTotal = (TextView) findViewById(R.id.tw_total);
+        twTotalUp = (TextView) findViewById(R.id.tw_total_upload);
+        twTotalDown = (TextView) findViewById(R.id.tw_total_download);
         twUp = (TextView) findViewById(R.id.tw_up);
         twDown = (TextView) findViewById(R.id.tw_down);
-        indicatorView = findViewById(R.id.indicator);
+        indicatorView = (TextView) findViewById(R.id.tw_indicator);
+        deviceNameView = (TextView) findViewById(R.id.tw_device_name);
+        totalSyncTimeView = (TextView) findViewById(R.id.tw_total_sync_time);
+        totalScanTimeView = (TextView) findViewById(R.id.tw_total_scan_time);
 
         list = (ListView)findViewById(R.id.list);
         items = new ArrayList<>();
@@ -85,6 +99,9 @@ public class KifeActivity extends SyncthingActivity{
         twId.setText(folder.id);
         twLabel.setText(label);
         twPath.setText(folder.path);
+
+        String selfId = getApi().getLocalDevice().deviceID.substring(0,3);
+        deviceNameView.setText(selfId);
 
         //update sync details
         Handler handler = new Handler();
@@ -119,58 +136,85 @@ public class KifeActivity extends SyncthingActivity{
                     return;
                 }
 
-                //ilk girişte initialize et
-                if(uploadList == null) {
-                    uploadList = new long[devices.size()];
-                    for(int i = 0; i<uploadList.length; i++) {
-                        uploadList[i] = 0;
+                int size = devices.size();
+                if(devicesSize == 0) {  //ilk girişte devices büyüklüğünde upload ve downloadlist oluşturup içnii sıfırla doldur
+                    devicesSize = size;
+                    uploadList = new ArrayList<>(size);
+                    for(int i = 0; i<size; i++) {
+                        uploadList.add((long) 0);
                     }
-                    downloadList = new long[devices.size()];
-                    for(int i=0; i<downloadList.length; i++) {
-                        downloadList[i] = 0;
+                    downloadList = new ArrayList<>(size);
+                    for(int i=0; i<size; i++) {
+                        downloadList.add((long) 0);
                     }
+                } else if(devicesSize != size) {    //yeni cihaz eklendiğinden bu cihaz için up ve download list'e yeni entry ekle
+                    uploadList.add((long) 0);
+                    downloadList.add((long) 0);
                 }
 
                 items.clear();
-                for(int i=0; i<devices.size(); i++) {
+
+                long instantDownloadRate = 0;
+                long instantUploadRate = 0;
+
+                for(int i=0; i<size; i++) {
 
                     Device device = devices.get(i);
                     String someDeviceId = device.deviceID;
                     Connections.Connection c = connections.connections.get(someDeviceId);
 
-                    long totalUpload = uploadList[i];
-                    long totalDownload = downloadList[i];
+                    long uploadSum = uploadList.get(i);
+                    long downloadSum = downloadList.get(i);
 
-                    int completion = -1;  //status by
-                    try {
-                        completion = c.completion;
-//                        twTotal.setText(completion+"");
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    if (i == 0) {
+                        try {
+                            twPercentage.setText(c.completion+"%");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
 
                     //add download
                     try {
                         long downloadRate = c.inBits;
+                        instantDownloadRate+= downloadRate;
                         downloadRate *= (UPDATE_TIME*CONNECTION_DISPLAY_CYCLE);
+                        downloadSum += downloadRate;
                         totalDownload += downloadRate;
                     } catch (Exception e) {}
 
                     //add upload
                     try {
                         long uploadRate = c.outBits;
+                        instantUploadRate += uploadRate;
                         uploadRate *= (UPDATE_TIME*CONNECTION_DISPLAY_CYCLE);
+                        uploadSum += uploadRate;
                         totalUpload += uploadRate;
                     } catch (Exception e) {}
 
-                    uploadList[i] = totalUpload;
-                    downloadList[i] = totalDownload;
+                    uploadList.set(i, uploadSum);
+                    downloadList.set(i, downloadSum);
 
-                    String download = Util.readableTransferRate(this, totalDownload);
-                    String upload = Util.readableTransferRate(this, totalUpload);
-                    Pair<String, String> item = new Pair(device.getDisplayName()+" | "+completion+"%", "d: "+download+"   |   u: "+upload);
+                    int j = i+1;
+                    if(deviceNumber != -1) {
+                        if(j>=deviceNumber) {
+                            j++;
+                        }
+                    }
+
+                    String id = someDeviceId.substring(0,3);
+
+                    String download = Util.readableTransferRate(this, downloadSum);
+                    String upload = Util.readableTransferRate(this, uploadSum);
+                    Pair<String, String> item = new Pair(device.getDisplayName()+" ("+id+')', "d: "+download+"   |   u: "+upload);
                     items.add(item);
                 }
+
+                twUp.setText(Util.readableTransferRate(this, instantUploadRate));
+                twDown.setText(Util.readableTransferRate(this, instantDownloadRate));
+                twTotalUp.setText(Util.readableTransferRate(this, totalUpload));
+                twTotalDown.setText(Util.readableTransferRate(this, totalDownload));
+
                 adapter.notifyDataSetChanged();
 
             } catch (Exception e) {}
@@ -194,7 +238,7 @@ public class KifeActivity extends SyncthingActivity{
 //        Log.i("!!!", "twItems: "+items);
 //        Log.i("!!!", "twSize: "+size);
 
-        twPercentage.setText(percentage+"");
+        twSomeData.setText(percentage+"");
         twState.setText(state);
         twItems.setText(items);
         twSize.setText(size);
@@ -203,19 +247,37 @@ public class KifeActivity extends SyncthingActivity{
     }
 
     public String getLocalizedState(Context c, String state, int percentage) {
+
+        if(!state.equals("syncing") && this.state == 1) {
+            this.state = 2;
+            endTimer(1);
+        } else if(!state.equals("scanning") && this.state == 3) {
+            this.state = 4;
+            endTimer(2);
+        }
+
         switch (state) {
             case "idle":
                 twState.setTextColor(ContextCompat.getColor(this, R.color.state_idle));
                 return c.getString(R.string.state_idle);
             case "scanning":
+                if(this.state != 3) {
+                    this.state = 3;
+                    startTimer();
+                }
                 twState.setTextColor(ContextCompat.getColor(this, R.color.state_scanning));
                 return c.getString(R.string.state_scanning);
             case "cleaning":
                 twState.setTextColor(ContextCompat.getColor(this, R.color.state_cleaning));
                 return c.getString(R.string.state_cleaning);
-            case "syncing":
+            case "syncing": {
+                if (this.state != 1) {   // sync başlamışsa zamanlamayı başlat
+                    this.state = 1;
+                    startTimer();
+                }
                 twState.setTextColor(ContextCompat.getColor(this, R.color.state_syncing));
                 return c.getString(R.string.state_syncing, percentage);
+            }
             case "error":
                 twState.setTextColor(ContextCompat.getColor(this, R.color.state_error));
                 return c.getString(R.string.state_error);
@@ -231,12 +293,23 @@ public class KifeActivity extends SyncthingActivity{
     }
 
     void indicate() {
-        if(indicator) {
-            indicator = false;
-            indicatorView.setBackgroundResource(R.color.green);
-        } else {
-            indicator = true;
-            indicatorView.setBackgroundResource(R.color.green2);
+        indicator++;
+        if (indicator == 4) {
+            indicator = 0;
+        }
+        switch (indicator){
+            case 0:
+                indicatorView.setText("|");
+                break;
+            case 1:
+                indicatorView.setText("/");
+                break;
+            case 2:
+                indicatorView.setText("--");
+                break;
+            case 3:
+                indicatorView.setText("\\");
+                break;
         }
     }
 
@@ -268,6 +341,56 @@ public class KifeActivity extends SyncthingActivity{
     protected void onDestroy() {
         //todo get service stop service
         super.onDestroy();
+    }
+
+    private void startTimer() {
+        start = System.currentTimeMillis();
+        totalSyncTimeView.setText("");
+        downloadOnStart = totalDownload;
+    }
+
+    private void endTimer(int param) {
+        long end = System.currentTimeMillis();
+        long dif = end-start;
+        dif /= 10;
+        String d = dif+"";
+        String time;
+        try {
+            int timePassed = Integer.parseInt(d.substring(0, d.length()-2));
+            time = getHour(timePassed);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            time = "?";
+        }
+
+        if(param == 1) {
+            dif = totalDownload-downloadOnStart;
+            String downloadAmount = Util.readableTransferRate(this, dif);
+            twTotalDown.setText(Util.readableTransferRate(this, totalDownload));
+            totalSyncTimeView.setText(downloadAmount  +" sync finished in " + time);
+        } else if(param == 2) {
+            totalScanTimeView.setText("Scan finished in " + time);
+        }
+    }
+
+    public static String getHour(int totalMinutes) {
+        String result = "";
+        if(totalMinutes<0) {
+            result = "-";
+            totalMinutes = totalMinutes*-1;
+        }
+        int h = totalMinutes/60;
+        int m = totalMinutes%60;
+        result += addZero(h)+":"+addZero(m);
+        return result;
+    }
+
+    public static String addZero(int i) {
+        String s = i+"";
+        if(i >= 0 && i < 10) {
+            s = '0' + s;
+        }
+        return s;
     }
 
     public class CustomArrayAdapter extends BaseArrayAdapter<Pair> {

@@ -85,6 +85,9 @@ public class KifeDeviceManager {
     }
 
     public void getDeviceList() {
+        if(!isSendSuccessful) {
+            return; //not yet
+        }
         Network.getInstance().getDeviceList(new NetworkListener() {
             @Override
             public void onResponse(Object data) {
