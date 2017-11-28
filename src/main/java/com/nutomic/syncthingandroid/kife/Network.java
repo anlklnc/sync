@@ -33,7 +33,8 @@ public class Network {
 
 //    public static final String BASE_URL = "http://192.168.43.237:8080/";
 //    public static final String BASE_URL = "http://192.168.43.206:8080/";
-    public static final String BASE_URL = "http://192.168.2.116:8080/";
+//    public static final String BASE_URL = "http://192.168.2.116:8080/";
+    public static final String BASE_URL = "http://192.168.2.2:8080/";
 
     private static final Network singleton = new Network();
     ControlPanelClient client;
@@ -60,10 +61,12 @@ public class Network {
 
     public interface ControlPanelClient {
 
-        @GET("/api/sync/device/list")
+//        @GET("/api/sync/device/list")
+        @GET("/api/device/list")
         Call<ArrayList<Device>>deviceList();
 
-        @POST("/api/sync/device")
+//        @POST("/api/sync/device")
+        @POST("/api/device/create")
         Call<PostResponse> sendDevice(@Body Device user);
     }
 

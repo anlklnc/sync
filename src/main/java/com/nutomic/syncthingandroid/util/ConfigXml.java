@@ -2,7 +2,6 @@ package com.nutomic.syncthingandroid.util;
 
 import android.content.Context;
 import android.os.Build;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.preference.PreferenceManager;
@@ -285,7 +284,8 @@ public class ConfigXml {
         folder.setAttribute("id", "kifetest");
 
 //        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/camera";
-        String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/KifeSync";
+//        String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/KifeSync";
+        String path = "/mnt/ssd/KifeSync";
         display(path);
         folder.setAttribute("path", path);
 

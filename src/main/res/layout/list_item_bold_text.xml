@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tw_total_sync_time" style="@style/ww"
+    android:layout_below="@id/lin_textt"
+    android:layout_marginTop="20dp"
+    android:layout_marginLeft="20dp"
+    android:textStyle="bold"
+    />

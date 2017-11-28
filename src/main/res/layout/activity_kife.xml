@@ -6,6 +6,146 @@
     tools:context="com.nutomic.syncthingandroid.kife.KifeActivity">
 
     <LinearLayout
+        android:id="@+id/lin_textt"
+        android:layout_width="match_parent" android:layout_height="match_parent"
+        android:layout_marginTop="50dp" android:layout_marginLeft="20dp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="4"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="30dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/tw1"
+                        android:text="id" />
+
+                    <TextView
+                        style="@style/tw1"
+                        android:text="label" />
+
+                    <TextView
+                        style="@style/tw1"
+                        android:text="path" />
+
+                    <TextView
+                        style="@style/tw1"
+                        android:text="state" />
+
+                    <TextView
+                        style="@style/tw1"
+                        android:text="somedata" />
+
+                    <TextView
+                        style="@style/tw1"
+                        android:text="percentage" />
+
+                    <TextView
+                        style="@style/tw1"
+                        android:text="items" />
+
+                    <TextView
+                        style="@style/tw1"
+                        android:text="size" />
+
+                    <TextView
+                        style="@style/tw1"
+                        android:text="total upl" />
+
+                    <TextView
+                        style="@style/tw1"
+                        android:text="total downl" />
+
+                    <TextView
+                        style="@style/tw1"
+                        android:text="upload" />
+
+                    <TextView
+                        style="@style/tw1"
+                        android:text="download" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_weight="3"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tw_id"
+                        style="@style/tw2" />
+
+                    <TextView
+                        android:id="@+id/tw_label"
+                        style="@style/tw2" />
+
+                    <TextView
+                        android:id="@+id/tw_path"
+                        style="@style/tw2" />
+
+                    <TextView
+                        android:id="@+id/tw_state"
+                        style="@style/tw2" />
+
+                    <TextView
+                        android:id="@+id/tw_somedata"
+                        style="@style/tw2" />
+
+                    <TextView
+                        android:id="@+id/tw_percentage"
+                        style="@style/tw2" />
+
+                    <TextView
+                        android:id="@+id/tw_items"
+                        style="@style/tw2" />
+
+                    <TextView
+                        android:id="@+id/tw_size"
+                        style="@style/tw2" />
+
+                    <TextView
+                        android:id="@+id/tw_total_upload"
+                        style="@style/tw2" />
+
+                    <TextView
+                        android:id="@+id/tw_total_download"
+                        style="@style/tw2" />
+
+                    <TextView
+                        android:id="@+id/tw_up"
+                        style="@style/tw2" />
+
+                    <TextView
+                        android:id="@+id/tw_down"
+                        style="@style/tw2" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <ListView
+                android:id="@+id/list_sync_results"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:listitem="@layout/list_item_bold_text"></ListView>
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/list_bytes"
+            android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="3"
+            android:layout_marginRight="20dp"
+            ></ListView>
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/lin_buttons"
         style="@style/ww"
         android:layout_alignParentBottom="true"
@@ -53,146 +193,6 @@
         android:layout_marginTop="4dp"
         android:gravity="center"
         android:text="|"/>
-
-    <LinearLayout
-        android:id="@+id/lin_textt"
-        android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:layout_marginTop="50dp" android:layout_marginLeft="20dp"
-        android:orientation="horizontal">
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="30dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <TextView
-                style="@style/tw1"
-                android:text="id" />
-
-            <TextView
-                style="@style/tw1"
-                android:text="label" />
-
-            <TextView
-                style="@style/tw1"
-                android:text="path" />
-
-            <TextView
-                style="@style/tw1"
-                android:text="state" />
-
-            <TextView
-                style="@style/tw1"
-                android:text="somedata" />
-
-            <TextView
-                style="@style/tw1"
-                android:text="percentage" />
-
-            <TextView
-                style="@style/tw1"
-                android:text="items" />
-
-            <TextView
-                style="@style/tw1"
-                android:text="size" />
-
-            <TextView
-                style="@style/tw1"
-                android:text="total upl" />
-
-            <TextView
-                style="@style/tw1"
-                android:text="total downl" />
-
-            <TextView
-                style="@style/tw1"
-                android:text="upload" />
-
-            <TextView
-                style="@style/tw1"
-                android:text="download" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_weight="3"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/tw_id"
-                style="@style/tw2" />
-
-            <TextView
-                android:id="@+id/tw_label"
-                style="@style/tw2" />
-
-            <TextView
-                android:id="@+id/tw_path"
-                style="@style/tw2" />
-
-            <TextView
-                android:id="@+id/tw_state"
-                style="@style/tw2" />
-
-            <TextView
-                android:id="@+id/tw_somedata"
-                style="@style/tw2" />
-
-            <TextView
-                android:id="@+id/tw_percentage"
-                style="@style/tw2" />
-
-            <TextView
-                android:id="@+id/tw_items"
-                style="@style/tw2" />
-
-            <TextView
-                android:id="@+id/tw_size"
-                style="@style/tw2" />
-
-            <TextView
-                android:id="@+id/tw_total_upload"
-                style="@style/tw2" />
-
-            <TextView
-                android:id="@+id/tw_total_download"
-                style="@style/tw2" />
-
-            <TextView
-                android:id="@+id/tw_up"
-                style="@style/tw2" />
-
-            <TextView
-                android:id="@+id/tw_down"
-                style="@style/tw2" />
-        </LinearLayout>
-
-        <ListView
-            android:id="@+id/list"
-            android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="3"
-            android:layout_marginRight="20dp"
-            ></ListView>
-
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/tw_total_sync_time" style="@style/ww"
-        android:layout_below="@id/lin_textt"
-        android:layout_marginTop="20dp" android:layout_marginLeft="20dp"
-        android:textStyle="bold"
-        />
-
-    <TextView
-        android:id="@+id/tw_total_scan_time" style="@style/ww"
-        android:layout_below="@id/tw_total_sync_time"
-        android:layout_marginTop="10dp" android:layout_marginLeft="20dp"
-        android:textStyle="bold"
-        />
 
     <TextView
         android:id="@+id/tw_device_name" style="@style/ww"
