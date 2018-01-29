@@ -209,9 +209,11 @@ public class ConfigXml {
                 .getElementsByTagName("gui").item(0);
         boolean tls = Boolean.parseBoolean(gui.getAttribute("tls"));
         if (!tls) {
+            //todo iptal
             Log.i(TAG, "Enforce TLS");
             gui.setAttribute("tls", Boolean.toString(true));
             changed = true;
+            //todo iptal
         }
 
         if (changed) {

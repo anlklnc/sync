@@ -369,6 +369,7 @@ public class KifeActivity extends SyncthingActivity{
     private void endTimer() {
         syncing = false;
 
+        int timePassed = 0;
         String time;
         long dif;
         try {
@@ -376,7 +377,7 @@ public class KifeActivity extends SyncthingActivity{
             dif = end-start;
             dif /= 10;
             String d = dif+"";
-            int timePassed = Integer.parseInt(d.substring(0, d.length()-2));
+            timePassed = Integer.parseInt(d.substring(0, d.length()-2));
             time = getHour(timePassed);
         } catch (Exception e) {
             e.printStackTrace();
@@ -409,8 +410,26 @@ public class KifeActivity extends SyncthingActivity{
         String syncReport = downloadAmount  +" sync finished in " + time + "  (avg "+averageDownload+')';
         resultsAdapter.add(syncReport);
         resultsAdapter.notifyDataSetChanged();
-        Log.i("!!!", "SYNC FINISHED: "+selfId+"//"+downloadAmount+"//"+time);
         //todo sync ended broadcast
+
+        //send sync report
+        if(timePassed<1) {    //bir dakikadan küçükse hiç zahmet etme
+            return;
+        }
+        SyncReport report = new SyncReport(selfId, downloadAmount, time);
+        String finalSelfId = selfId;
+        String finalTime = time;
+        Network.getInstance().sendSyncReport(report, new NetworkListener() {
+            @Override
+            public void onResponse(Object o) {
+                Log.i("!!!", "sync reported: "+ finalSelfId +"//"+downloadAmount+"//"+ finalTime);
+            }
+
+            @Override
+            public void onError(int errorCode) {
+                Log.i("!!!", "onError: sync report");
+            }
+        });
     }
 
     public static String getHour(int totalMinutes) {

@@ -71,7 +71,8 @@ public class SyncthingRunnable implements Runnable {
     public SyncthingRunnable(Context context, Command command) {
         mContext = context;
         mSyncthingBinary = mContext.getApplicationInfo().nativeLibraryDir + "/" + BINARY_NAME;
-        mLogFile = new File(mContext.getExternalFilesDir(null), "syncthing.log");
+        File f = mContext.getExternalFilesDir(null);
+        mLogFile = new File(f, "syncthing.log");
         mPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         switch (command) {
             case generate:

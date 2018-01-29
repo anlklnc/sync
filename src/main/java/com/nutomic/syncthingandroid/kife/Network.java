@@ -34,7 +34,8 @@ public class Network {
 //    public static final String BASE_URL = "http://192.168.43.237:8080/";
 //    public static final String BASE_URL = "http://192.168.43.206:8080/";
 //    public static final String BASE_URL = "http://192.168.2.116:8080/";
-    public static final String BASE_URL = "http://192.168.2.2:8080/";
+    public static final String BASE_URL = "http://192.168.2.2:8081/";
+//    public static final String BASE_URL = "http://192.168.2.10:8080/";
 
     private static final Network singleton = new Network();
     ControlPanelClient client;
@@ -61,12 +62,18 @@ public class Network {
 
     public interface ControlPanelClient {
 
-//        @GET("/api/sync/device/list")
-        @GET("/api/device/list")
+        @GET("/api/sync/device/list")
+//        @GET("/api/device/list")
         Call<ArrayList<Device>>deviceList();
 
-//        @POST("/api/sync/device")
-        @POST("/api/device/create")
+        @GET("/api/sync/result/list")
+        Call<ArrayList<SyncReport>>reportList();
+
+        @POST("/api/sync/result")
+        Call<SyncReport> sendSyncReport(@Body SyncReport report);
+
+        @POST("/api/sync/device")
+//        @POST("/api/device/create")
         Call<PostResponse> sendDevice(@Body Device user);
     }
 
@@ -75,6 +82,9 @@ public class Network {
 
     /** login for maintenance mode */
     void sendDevice(final NetworkListener listener, Device device) { setRequest(client.sendDevice(device), listener);}
+
+    /** send download result */
+    void sendSyncReport(SyncReport report, final NetworkListener listener) { setRequest(client.sendSyncReport(report), listener);}
 
     //////////////////////////////////////////////////////////////////
 
