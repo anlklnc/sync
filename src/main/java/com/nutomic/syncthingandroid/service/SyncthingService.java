@@ -238,11 +238,14 @@ public class SyncthingService extends Service implements
                 pollWebGui();
                 mRunnable = new SyncthingRunnable(this, SyncthingRunnable.Command.main);
 
-                //// TODO: 8.8.2017
+                //emre! syncthing'in sistem kaynaklarını ne kadar kullanacağı burada belirleniyor.
+                // Syncthing runnable'ı bir thread içinde çalıştırıyorum. Bu thread'in priority'sini düşürünce az cpu kullanarak uzun sürede aktarım yapılıyor. Arttırınca tam tersi.
+                // Thread priortiy'lerle ilgili bilgiyi buradan bulabilirsin: https://developer.android.com/topic/performance/threads.html#priority
+                //hvl
                 Thread t = new Thread(mRunnable);
 //                t.setPriority(3);
                 t.start();
-                //// TODO: 8.8.2017
+                //hvl
 
                 updateNotification();
             }
@@ -352,6 +355,7 @@ public class SyncthingService extends Service implements
         protected Pair<URL, String> doInBackground(Void... voids) {
             try {
                 mConfig = new ConfigXml(SyncthingService.this);
+                //emre! device id'leri ile ilgili işlemler için gereken manager burada çalıştırılıyor
                 //hvl
                 kifeDeviceManager = new KifeDeviceManager(SyncthingService.this, mConfig);
                 //hvl

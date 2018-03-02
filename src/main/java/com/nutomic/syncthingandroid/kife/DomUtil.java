@@ -17,7 +17,8 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 /**
- * Created by asd on 5.6.2017.
+ * Created by Anıl Kılınç on 5.6.2017.
+ * Config.xml içinde yapılacak değişiklikler için gerekli fonksiyonları içerir.
  */
 
 public class DomUtil {

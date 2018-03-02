@@ -154,29 +154,6 @@ public class ConfigXml {
         h.post(() -> Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show());
     }
 
-    public void test() {
-
-//        Element e = DomUtil.findElement(mConfig, "device", false);
-//        Node n = e.cloneNode(true);
-//        mConfig.getDocumentElement().appendChild(n);
-//        String s = DomUtil.print(mConfig);
-//        Log.i(TAG, "test: "+s);
-
-
-        //
-//        Element ff = (Element)mConfig.getDocumentElement();
-//        Element ee = (Element)ff.cloneNode(true);
-        //
-
-//        Element parent = mConfig.getDocumentElement();
-//        NodeList nl = parent.getElementsByTagName("device");
-//        for(int i = 0; i<nl.getLength(); i++) {
-//            Element deviceElement = (Element) nl.item(i);
-//            String id = deviceElement.getAttribute("id");
-//            Log.i("!!!", "test: " + id);
-//        }
-    }
-
     /////////////////////////////////////////////hvl
 
     /**
@@ -209,11 +186,12 @@ public class ConfigXml {
                 .getElementsByTagName("gui").item(0);
         boolean tls = Boolean.parseBoolean(gui.getAttribute("tls"));
         if (!tls) {
-            //todo iptal
-            Log.i(TAG, "Enforce TLS");
-            gui.setAttribute("tls", Boolean.toString(true));
-            changed = true;
-            //todo iptal
+            //emre! android 5.0 altı cihazlarda oluşan ssl sorununu burayı iptal ederek çözdüm.
+            //iptal
+//            Log.i(TAG, "Enforce TLS");
+//            gui.setAttribute("tls", Boolean.toString(true));
+//            changed = true;
+            //iptal
         }
 
         if (changed) {
@@ -272,6 +250,7 @@ public class ConfigXml {
 
     /**
      * Change default folder id to camera and path to camera folder path.
+     * emre! default folder ve folder id'yi burada değiştirdim. server ve tüm peerlar arasındaki sync edilecek folder'ların id leri aynı olmalı. (kifetest olarak belirledik)
      */
     private void changeDefaultFolder() {
         Element folder = (Element) mConfig.getDocumentElement()

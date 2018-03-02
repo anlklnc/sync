@@ -1,7 +1,7 @@
 package com.nutomic.syncthingandroid.kife;
 
 /**
- * Created by asd on 13.12.2017.
+ * Created by Anıl Kılınç on 13.12.2017.
  */
 
 public class SyncReport {

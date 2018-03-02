@@ -13,7 +13,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * Created by asd on 2.6.2017.
+ * Created by Anıl Kılınç on 2.6.2017.
+ * Cihazlar ile ilgili yapılacak işlemleri içerir.
  */
 
 public class KifeDeviceManager {
@@ -36,6 +37,7 @@ public class KifeDeviceManager {
         startPolling();
     }
 
+    /** Düzenli olarak yeni peer eklenip eklenemdiğini kontrol eder. */
     private void startPolling() {
 
         Timer timer = new Timer();
@@ -60,6 +62,7 @@ public class KifeDeviceManager {
         timer.schedule(task, 0, POLLING_TIME*1000);
     }
 
+    /** Bu cihazı peer olarak server'a bildirir. */
     private void sendDevice() {
         Device device = xml.getSelfDevice();
 
@@ -84,6 +87,7 @@ public class KifeDeviceManager {
         }, device);
     }
 
+    /** Server'dan peer'ların listesini alır. */
     public void getDeviceList() {
         if(!isSendSuccessful) {
             return; //not yet
@@ -103,7 +107,7 @@ public class KifeDeviceManager {
         });
     }
 
-    /** Server'dan gelen cihazları kontrol eder, kayıtlı olmayanları xml'e ekleyip diske kaydeder. */
+    /** Server'dan gelen peer'ları kontrol eder, kayıtlı olmayanları xml'e ekleyip ardından diske kaydeder. */
     private void handleList(ArrayList<Device> serverItems) {
 
         ArrayList<Device> newItems = new ArrayList<>();

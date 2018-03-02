@@ -5,7 +5,7 @@ import com.nutomic.syncthingandroid.model.Device;
 import org.json.JSONObject;
 
 /**
- * Created by asd on 5.6.2017.
+ * Created by Anıl Kılınç on 5.6.2017.
  */
 
 public class KifeDevice extends Device{

@@ -11,7 +11,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 /**
- * Created by asd on 2.8.2017.
+ * Created by Anıl Kılınç on 2.8.2017.
  */
 
 public class Disk {

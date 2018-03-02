@@ -362,6 +362,7 @@ public class KifeActivity extends SyncthingActivity{
         syncing = true;
         start = System.currentTimeMillis();
         downloadOnStart = totalDownload;
+        //emre! senkronizasyonun başladığı bilgisi istendi, tam bu noktada broadcast olarak yayılacak
         //todo sync started broadcast
         downloadItems.clear();
     }
@@ -412,7 +413,7 @@ public class KifeActivity extends SyncthingActivity{
         resultsAdapter.notifyDataSetChanged();
         //todo sync ended broadcast
 
-        //send sync report
+        //sync işleminin detaylarını(indirme hızı, miktarı, süresi vs) server'a istatistik için gönder.
         if(timePassed<1) {    //bir dakikadan küçükse hiç zahmet etme
             return;
         }

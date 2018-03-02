@@ -1,7 +1,7 @@
 package com.nutomic.syncthingandroid.kife;
 
 /**
- * Created by asd on 25.7.2017.
+ * Created by Anıl Kılınç on 25.7.2017.
  */
 
 public class PostResponse {

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by asd on 20.11.2017.
+ * Created by Anıl Kılınç on 20.11.2017.
  */
 
 public abstract class BaseArrayAdapter<T> extends ArrayAdapter<T> {

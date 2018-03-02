@@ -15,7 +15,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
 
-import okhttp3.Headers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -26,38 +25,18 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 
 /**
- * Created by asd on 13.6.2017.
+ * Created by Anıl Kılınç on 13.6.2017.
  */
 
 public class Network {
 
-//    public static final String BASE_URL = "http://192.168.43.237:8080/";
-//    public static final String BASE_URL = "http://192.168.43.206:8080/";
-//    public static final String BASE_URL = "http://192.168.2.116:8080/";
     public static final String BASE_URL = "http://192.168.2.2:8081/";
-//    public static final String BASE_URL = "http://192.168.2.10:8080/";
 
     private static final Network singleton = new Network();
     ControlPanelClient client;
 
     public static Network getInstance() {
         return singleton;
-    }
-
-    /** Verilen key ve listener ile tüm request'lerde kullanılabilen generic bir NetworkListener oluşturur.*/
-    NetworkListener getListener(final String url, final ObjectResponseListener listener) {
-
-        return  new NetworkListener() {
-            @Override
-            public void onResponse(Object data) {
-                listener.onResponse(data);
-            }
-
-            @Override
-            public void onError(int errorCode) {
-                Log.i("!!!", "onError: " + errorCode);
-            }
-        };
     }
 
     public interface ControlPanelClient {
@@ -134,13 +113,5 @@ public class Network {
         };
 
         call.enqueue(callback);
-    }
-
-    private String getUrl(Call<?> call) {
-        //display outgoing headers for post request
-        Headers h = call.request().headers();
-        String s = h.toString();
-        Log.i("!!!", "headers: " + s);
-        return call.request().url().toString();
     }
 }
